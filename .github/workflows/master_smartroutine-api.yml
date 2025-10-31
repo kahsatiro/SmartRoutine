@@ -36,4 +36,3 @@ jobs:
           slot-name: 'production'
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_342981571477435F8E24D99D4DC951F6 }} # A sua "senha" de publicação. NÃO a altere.
           package: './Codigo/backend/target/*.jar' # O caminho CORRETO para o ficheiro .jar
-          
