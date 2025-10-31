@@ -1,64 +1,39 @@
-# Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
-# More GitHub Actions for Azure: https://github.com/Azure/actions
+# Este workflow irá construir e publicar uma aplicação Java no Azure App Service.
 
 name: Build and deploy JAR app to Azure Web App - smartroutine-api
 
 on:
   push:
     branches:
-      - master
-  workflow_dispatch:
+      - master  # Acionado quando há um push para a branch 'master'
+  workflow_dispatch: # Permite acionar manualmente a partir da aba "Actions"
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read #This is required for actions/checkout
 
     steps:
-      - uses: actions/checkout@v4
+      # 1. Baixa o seu código do repositório
+      - uses: actions/checkout@v2
 
-      - name: Set up Java version
-        uses: actions/setup-java@v4
+      # 2. Configura o ambiente Java na versão 17
+      - name: Set up JDK 17
+        uses: actions/setup-java@v2
         with:
           java-version: '17'
-          distribution: 'microsoft'
+          distribution: 'temurin'
 
+      # 3. Entra na pasta do backend e compila o projeto, gerando o .jar
       - name: Build with Maven
-      run: mvn clean package --file pom.xml
-      working-directory: ./Codigo/backend
+        run: mvn clean package --file pom.xml
+        working-directory: ./Codigo/backend
 
-      - name: Upload artifact for deployment job
-        uses: actions/upload-artifact@v4
-        with:
-          name: java-app
-          path: '${{ github.workspace }}/target/*.jar'
-
-  deploy:
-    runs-on: ubuntu-latest
-    needs: build
-    permissions:
-      id-token: write #This is required for requesting the JWT
-      contents: read #This is required for actions/checkout
-  
-    steps:
-      - name: Download artifact from build job
-        uses: actions/download-artifact@v4
-        with:
-          name: java-app
-      
-      - name: Login to Azure
-        uses: azure/login@v2
-        with:
-          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_E53246ECBA6C4CD681F5A98AAD956C15 }}
-          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_420309DE2E574602822A9875C0B07002 }}
-          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_F4631982A1454BD88DF561FEB46FA087 }}
-
+      # 4. Publica o ficheiro .jar gerado no Azure App Service
       - name: Deploy to Azure Web App
-        id: deploy-to-webapp
-        uses: azure/webapps-deploy@v3
+        uses: azure/webapps-deploy@v2
         with:
-          app-name: 'smartroutine-api'
-          slot-name: 'Production'
-          package: '*.jar'
+          app-name: 'smartroutine-api' # O nome do seu App Service
+          slot-name: 'production'
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_342981571477435F8E24D99D4DC951F6 }} # A sua "senha" de publicação. NÃO a altere.
+          package: './Codigo/backend/target/*.jar' # O caminho CORRETO para o ficheiro .jar
           
