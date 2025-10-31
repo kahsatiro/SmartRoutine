@@ -1,0 +1,35 @@
+# ===================================================================
+# ARQUIVO .GITIGNORE PARA PROJETO JAVA COM MAVEN
+# ===================================================================
+
+# Explicação: Ignora a pasta 'target', que contém todos os arquivos
+# compilados (.class) e o arquivo final .jar. Esta pasta é gerada
+# automaticamente toda vez que você compila o projeto com 'mvn package'.
+# Ela é pesada e NUNCA deve ir para o GitHub.
+/target/
+
+# Explicação: Ignora arquivos de log. Eles são gerados durante a
+# execução e podem conter informações sensíveis, além de mudarem
+# constantemente.
+*.log
+
+# Explicação: Ignora configurações específicas de IDEs (ambientes de
+# desenvolvimento) como IntelliJ IDEA e Eclipse. Isso permite que
+# outros desenvolvedores usem a IDE que preferirem sem conflitos.
+.idea/
+*.iml
+.classpath
+.project
+.settings/
+
+# Explicação: Ignora configurações específicas do editor VS Code.
+.vscode/
+
+# Explicação: Ignora o arquivo .env, que contém variáveis de
+# ambiente locais, como senhas de banco de dados para desenvolvimento.
+# Este arquivo NUNCA deve ser enviado para o GitHub por segurança.
+.env
+
+# Explicação: Ignora arquivos de sistema operacional, como os do
+# macOS, que não têm relevância para o código.
+.DS_Store
