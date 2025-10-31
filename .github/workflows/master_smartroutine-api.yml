@@ -25,7 +25,8 @@ jobs:
           distribution: 'microsoft'
 
       - name: Build with Maven
-        run: mvn clean install
+      run: mvn clean package --file pom.xml
+      working-directory: ./Codigo/backend
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
@@ -59,5 +60,5 @@ jobs:
         with:
           app-name: 'smartroutine-api'
           slot-name: 'Production'
-          package: '*.jar'
+          package: './Codigo/backend/target/*.jar'
           
