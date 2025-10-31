@@ -25,8 +25,8 @@ jobs:
           distribution: 'microsoft'
 
       - name: Build with Maven
-      run: mvn clean package --file pom.xml
-      working-directory: ./Codigo/backend
+      	run: mvn clean package --file pom.xml
+      	working-directory: ./Codigo/backend
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
