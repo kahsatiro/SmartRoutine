@@ -154,16 +154,17 @@ public class AlimentoService {
                 return gson.toJson(new ErrorResponse("Alimento não encontrado"));
             }
 
-            Alimento alimento = gson.fromJson(request.body(), Alimento.class);
-            alimento.setId(id);
+            Alimento alimentoNovo = gson.fromJson(request.body(), Alimento.class);
+            alimentoExistente.mergeWith(alimentoNovo);
+            alimentoExistente.setId(id);
 
             // Validações
-            if (alimento.getNome() == null || alimento.getNome().trim().isEmpty()) {
+            if (alimentoExistente.getNome() == null || alimentoExistente.getNome().trim().isEmpty()) {
                 response.status(400);
                 return gson.toJson(new ErrorResponse("Nome é obrigatório"));
             }
 
-            if (alimentoDAO.update(alimento)) {
+            if (alimentoDAO.update(alimentoExistente)) {
                 response.status(200);
                 return gson.toJson(new SuccessResponse("Alimento atualizado com sucesso"));
             } else {

@@ -173,16 +173,17 @@ public class ReceitaService {
                 return gson.toJson(new ErrorResponse("Receita não encontrada"));
             }
 
-            Receita receita = gson.fromJson(request.body(), Receita.class);
-            receita.setId(id);
+            Receita receitaNova = gson.fromJson(request.body(), Receita.class);
+            receitaExistente.mergeWith(receitaNova);
+            receitaExistente.setId(id);
 
             // Validações
-            if (receita.getTitulo() == null || receita.getTitulo().trim().isEmpty()) {
+            if (receitaExistente.getTitulo() == null || receitaExistente.getTitulo().trim().isEmpty()) {
                 response.status(400);
                 return gson.toJson(new ErrorResponse("Título é obrigatório"));
             }
 
-            if (receitaDAO.update(receita)) {
+            if (receitaDAO.update(receitaExistente)) {
                 response.status(200);
                 return gson.toJson(new SuccessResponse("Receita atualizada com sucesso"));
             } else {

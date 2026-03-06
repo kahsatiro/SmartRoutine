@@ -96,6 +96,8 @@ public class UsuarioService {
                 return gson.toJson(new ErrorResponse("Email já cadastrado"));
             }
 
+            usuario.setDataAdicao(LocalDate.now());
+
             if (usuarioDAO.insert(usuario)) {
                 response.status(201);
                 return gson.toJson(new SuccessResponse("Usuário cadastrado com sucesso"));
@@ -125,23 +127,30 @@ public class UsuarioService {
                 return gson.toJson(new ErrorResponse("Usuário não encontrado"));
             }
 
-            Usuario usuario = gson.fromJson(request.body(), Usuario.class);
-            usuario.setId(id);
+            Usuario updates = gson.fromJson(request.body(), Usuario.class);
+
+            Usuario usuarioAtualizado = new Usuario();
+            usuarioAtualizado.setId(id);
+
+            usuarioAtualizado.setNome((updates.getNome() != null && !updates.getNome().trim().isEmpty()) ? updates.getNome() : usuarioExistente.getNome());
+            usuarioAtualizado.setEmail((updates.getEmail() != null && !updates.getEmail().trim().isEmpty()) ? updates.getEmail() : usuarioExistente.getEmail());
+            usuarioAtualizado.setSenha((updates.getSenha() != null && !updates.getSenha().trim().isEmpty()) ? updates.getSenha() : usuarioExistente.getSenha());
+            usuarioAtualizado.setDataNascimento(updates.getDataNascimento() != null ? updates.getDataNascimento() : usuarioExistente.getDataNascimento());
 
             // Validações
-            if (usuario.getNome() == null || usuario.getNome().trim().isEmpty()) {
+            if (usuarioAtualizado.getNome() == null || usuarioAtualizado.getNome().trim().isEmpty()) {
                 response.status(400);
                 return gson.toJson(new ErrorResponse("Nome é obrigatório"));
             }
 
             // Verifica se o email já está sendo usado por outro usuário
-            Usuario usuarioComEmail = usuarioDAO.getByEmail(usuario.getEmail());
+            Usuario usuarioComEmail = usuarioDAO.getByEmail(usuarioAtualizado.getEmail());
             if (usuarioComEmail != null && usuarioComEmail.getId() != id) {
                 response.status(409);
                 return gson.toJson(new ErrorResponse("Email já está em uso"));
             }
 
-            if (usuarioDAO.update(usuario)) {
+            if (usuarioDAO.update(usuarioAtualizado)) {
                 response.status(200);
                 return gson.toJson(new SuccessResponse("Usuário atualizado com sucesso"));
             } else {
@@ -216,7 +225,7 @@ public class UsuarioService {
                 return gson.toJson(new ErrorResponse("Credenciais inválidas"));
             }
         } catch (Exception e) {
-            response.status(400);
+            response.status(500);
             return gson.toJson(new ErrorResponse("Dados inválidos: " + e.getMessage()));
         }
     }

@@ -173,6 +173,8 @@ public class ReceitaFavoritaService {
                 return gson.toJson(new ErrorResponse("Receita já está nos favoritos"));
             }
 
+            favorita.setDataAdicao(LocalDateTime.now());
+
             if (receitaFavoritaDAO.insert(favorita)) {
                 response.status(201);
                 return gson.toJson(new SuccessResponse("Receita adicionada aos favoritos"));
