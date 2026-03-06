@@ -6,14 +6,14 @@
 -- ============================================
 -- TABELA: USUARIO
 -- ============================================
-INSERT INTO usuario (nome, email, senha, data_nascimento)
-VALUES ('Ana Carolina Silva', 'ana.silva@email.com', '$2b$10$xQYZ123...hashSenha1', '1992-03-15'),
-       ('Bruno Santos Costa', 'bruno.costa@email.com', '$2b$10$xQYZ123...hashSenha2', '1988-07-22'),
-       ('Carla Fernandes', 'carla.fernandes@email.com', '$2b$10$xQYZ123...hashSenha3', '1995-11-08'),
-       ('Daniel Oliveira', 'daniel.oliveira@email.com', '$2b$10$xQYZ123...hashSenha4', '1990-01-30'),
-       ('Elena Rodrigues', 'elena.rodrigues@email.com', '$2b$10$xQYZ123...hashSenha5', '1987-09-14'),
-       ('Felipe Almeida', 'felipe.almeida@email.com', '$2b$10$xQYZ123...hashSenha6', '1993-05-27'),
-       ('Gabriela Lima', 'gabriela.lima@email.com', '$2b$10$xQYZ123...hashSenha7', '1991-12-03');
+INSERT INTO usuario (nome, email, senha, data_nascimento, data_adicao)
+VALUES ('Ana Carolina Silva', 'as@email.com', '!Abc321', '1992-03-15', '2025-01-15'),
+       ('Bruno Santos Costa', 'bruno.costa@email.com', '$2b$10$xQYZ123...hashSenha2', '1988-07-22', '2025-01-15'),
+       ('Carla Fernandes', 'carla.fernandes@email.com', '$2b$10$xQYZ123...hashSenha3', '1995-11-08', '2025-02-20'),
+       ('Daniel Oliveira', 'daniel.oliveira@email.com', '$2b$10$xQYZ123...hashSenha4', '1990-01-30', '2025-03-10'),
+       ('Elena Rodrigues', 'elena.rodrigues@email.com', '$2b$10$xQYZ123...hashSenha5', '1987-09-14', '2025-04-05'),
+       ('Felipe Almeida', 'felipe.almeida@email.com', '$2b$10$xQYZ123...hashSenha6', '1993-05-27', '2025-05-12'),
+       ('Gabriela Lima', 'gabriela.lima@email.com', '$2b$10$xQYZ123...hashSenha7', '1991-12-03', '2025-06-18');
 
 -- ============================================
 -- TABELA: ALIMENTO

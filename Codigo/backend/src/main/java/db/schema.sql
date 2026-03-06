@@ -19,7 +19,8 @@ CREATE TABLE usuario
     nome            VARCHAR(100)        NOT NULL,
     email           VARCHAR(150) UNIQUE NOT NULL,
     senha           VARCHAR(255)        NOT NULL,
-    data_nascimento DATE                NOT NULL
+    data_nascimento DATE                NOT NULL,
+    data_adicao     DATE                NOT NULL
 );
 
 -- ============================================
@@ -69,6 +70,7 @@ CREATE TABLE receitas_favoritas
     id         SERIAL PRIMARY KEY,
     usuario_id INTEGER NOT NULL,
     receita_id INTEGER NOT NULL,
+    data_adicao DATE NOT NULL,
     FOREIGN KEY (usuario_id) REFERENCES usuario (id) ON DELETE CASCADE,
     FOREIGN KEY (receita_id) REFERENCES receita (id) ON DELETE CASCADE,
     UNIQUE (usuario_id, receita_id)
