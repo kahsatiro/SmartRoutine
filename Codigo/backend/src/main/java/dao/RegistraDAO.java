@@ -29,7 +29,7 @@ public class RegistraDAO extends DAO {
             ps.setDate(4, registra.getDataValidade() != null ? Date.valueOf(registra.getDataValidade()) : null);
             ps.setString(5, registra.getUnidadeMedida());
             ps.setString(6, registra.getLote());
-            ps.setBigDecimal(7, registra.getQuantidade());
+            ps.setInt(7, registra.getQuantidade());
 
             ps.executeUpdate();
             ps.close();
@@ -197,7 +197,7 @@ public class RegistraDAO extends DAO {
             ps.setDate(4, registra.getDataValidade() != null ? Date.valueOf(registra.getDataValidade()) : null);
             ps.setString(5, registra.getUnidadeMedida());
             ps.setString(6, registra.getLote());
-            ps.setBigDecimal(7, registra.getQuantidade());
+            ps.setInt(7, registra.getQuantidade());
             ps.setInt(8, registra.getId());
 
             int rowsAffected = ps.executeUpdate();
@@ -250,7 +250,7 @@ public class RegistraDAO extends DAO {
 
         registra.setUnidadeMedida(rs.getString("unidade_medida"));
         registra.setLote(rs.getString("lote"));
-        registra.setQuantidade(rs.getBigDecimal("quantidade"));
+        registra.setQuantidade(rs.getInt("quantidade"));
         registra.setNomeAlimento(rs.getString("nome_alimento"));
         registra.setNomeUsuario(rs.getString("nome_usuario"));
 

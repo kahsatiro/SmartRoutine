@@ -1,7 +1,12 @@
 package dao;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 import util.EnvConfig;
-import java.sql.*;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import org.mindrot.jbcrypt.BCrypt;
 
 public class DAO {
     protected Connection conexao;
@@ -10,7 +15,7 @@ public class DAO {
     private static final String URL = EnvConfig.getDbUrl();
     private static final String USUARIO = EnvConfig.getDbUser();
     private static final String SENHA = EnvConfig.getDbPassword();
-
+    
     public DAO() {
         conexao = null;
     }

@@ -18,12 +18,13 @@ public class ReceitaFavoritaDAO extends DAO {
      */
     public boolean insert(ReceitaFavorita favorita) {
         boolean status = false;
-        String sql = "INSERT INTO receitas_favoritas (usuario_id, receita_id) VALUES (?, ?)";
+        String sql = "INSERT INTO receitas_favoritas (usuario_id, receita_id, data_adicao) VALUES (?, ?, ?)";
 
         try {
             PreparedStatement ps = conexao.prepareStatement(sql);
             ps.setInt(1, favorita.getUsuarioId());
             ps.setInt(2, favorita.getReceitaId());
+            ps.setTimestamp(3, Timestamp.valueOf(favorita.getDataAdicao()));
 
             ps.executeUpdate();
             ps.close();
