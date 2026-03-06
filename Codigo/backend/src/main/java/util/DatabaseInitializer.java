@@ -5,6 +5,9 @@ import dao.DAO;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -12,8 +15,8 @@ import java.sql.Statement;
 public class DatabaseInitializer extends DAO {
 
     // Caminhos dos arquivos SQL
-    private static final String SCHEMA_FILE = "src/main/java/db/schema.sql";
-    private static final String SEED_FILE = "src/main/java/db/seed.sql";
+	private static final String SCHEMA_FILE = "db/schema.sql";
+	private static final String SEED_FILE = "db/seed.sql";
 
     public DatabaseInitializer() {
         super();
@@ -72,7 +75,19 @@ public class DatabaseInitializer extends DAO {
      * Executa um script SQL a partir de um arquivo
      */
     private void executeScript(String path) {
-        try (BufferedReader br = new BufferedReader(new FileReader(path));
+        // 1. Abertura do arquivo via ClassLoader (A MUDANÇA PRINCIPAL)
+        ClassLoader classLoader = getClass().getClassLoader();
+        InputStream inputStream = classLoader.getResourceAsStream(path);
+
+        if (inputStream == null) {
+            String errorMsg = "   ❌ Erro ao ler arquivo: Arquivo não encontrado no classpath: " + path;
+            System.err.println(errorMsg);
+            throw new RuntimeException(errorMsg);
+        }
+
+        // 2. O restante da sua lógica (quase idêntica)
+        //    O 'Statement' foi movido para dentro do 'try' do BufferedReader
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
              Statement stmt = conexao.createStatement()) {
 
             StringBuilder sql = new StringBuilder();
@@ -87,12 +102,12 @@ public class DatabaseInitializer extends DAO {
                 linhaAtual++;
                 linha = linha.trim();
 
-                // Ignorar linhas vazias e comentários
+                // Ignorar linhas vazias e comentários (Sua Lógica)
                 if (linha.isEmpty() || linha.startsWith("--")) {
                     continue;
                 }
 
-                // Ignorar comandos específicos do psql
+                // Ignorar comandos específicos do psql (Sua Lógica)
                 if (linha.matches("\\\\c\\s+\\w+.*") ||
                         linha.equalsIgnoreCase("VACUUM ANALYZE;") ||
                         linha.equalsIgnoreCase("VACUUM ANALYZE")) {
@@ -111,7 +126,7 @@ public class DatabaseInitializer extends DAO {
                             stmt.execute(comando);
                             comandosExecutados++;
 
-                            // Mostrar progresso visual
+                            // Mostrar progresso visual (Sua Lógica)
                             if (comandosExecutados % 5 == 0) {
                                 System.out.print("█");
                             } else if (comandosExecutados % 2 == 0) {
@@ -119,7 +134,7 @@ public class DatabaseInitializer extends DAO {
                             }
 
                         } catch (SQLException e) {
-                            // Ignorar alguns erros esperados
+                            // Ignorar alguns erros esperados (Sua Lógica)
                             String errorMsg = e.getMessage().toLowerCase();
                             if (!errorMsg.contains("already exists") &&
                                     !errorMsg.contains("does not exist") &&

@@ -83,33 +83,28 @@ public class EnvConfig {
     }
 
     public static String getDbUrl() {
-        return String.format("jdbc:postgresql://%s:%s/%s",
-                getDbHost(),
+        String host = getDbHost();
+        String url = String.format("jdbc:postgresql://%s:%s/%s",
+                host,
                 getDbPort(),
                 getDbName()
         );
+
+        // SE for um endereço do Azure, adiciona obrigatoriamente o SSL
+        if (host.contains("postgres.database.azure.com")) {
+            url += "?ssl=true&sslmode=require";
+        }
+
+        return url;
     }
 
     // ==================== Configurações da API ====================
-    
+
     public static int getApiPort() {
-        // O ProcessBuilder nos ajuda a ler as variáveis de ambiente do sistema
-        ProcessBuilder processBuilder = new ProcessBuilder();
-        
-        // O Azure define a variável de ambiente 'PORT'
-        String portVar = processBuilder.environment().get("PORT");
-        
-        if (portVar != null && !portVar.isEmpty()) {
-            try {
-                // Se a variável existir, converte para inteiro e retorna
-                return Integer.parseInt(portVar);
-            } catch (NumberFormatException e) {
-                // Se der erro na conversão, loga o erro e usa a porta padrão
-                System.err.println("AVISO: A variável PORT ('" + portVar + "') não é um número válido. Usando porta padrão 6789.");
-            }
-        }
-        
-        // Se a variável PORT não existir (rodando localmente), retorna sua porta padrão
-        return 6789;
+        return getInt("API_PORT", 6789);
+    }
+
+    public static String getHfToken() {
+        return get("HF_TOKEN", "");
     }
 }
