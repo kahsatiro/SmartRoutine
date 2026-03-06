@@ -6,36 +6,41 @@ import static spark.Spark.*;
 
 public class Aplicacao {
 
-    private static UsuarioService usuarioService = new UsuarioService();
-    private static AlimentoService alimentoService = new AlimentoService();
-    private static ReceitaService receitaService = new ReceitaService();
-    private static RegistraService registraService = new RegistraService();
-    private static ReceitaFavoritaService receitaFavoritaService = new ReceitaFavoritaService();
+    // Inicialização dos Serviços (Lógica de Negócio)
+    private static final UsuarioService usuarioService = new UsuarioService();
+    private static final AlimentoService alimentoService = new AlimentoService();
+    private static final ReceitaService receitaService = new ReceitaService();
+    private static final RegistraService registraService = new RegistraService();
+    private static final ReceitaFavoritaService receitaFavoritaService = new ReceitaFavoritaService();
+    private static final IAService iaService = new IAService();
 
     public static void main(String[] args) {
-        // Configuração da porta
+        // 1. Configuração da Porta
+        // Pega do .env (API_PORT) ou usa 6789 como padrão
         port(EnvConfig.getApiPort());
 
-        // Configuração de CORS
+        // 2. Configuração de CORS (Fundamental para o React funcionar)
         configurarCORS();
 
-        // Rota raiz
+        // 3. Rota de Teste (Para saber se a API está viva)
         get("/", (request, response) -> {
             response.type("application/json");
-            return "{\"message\": \"Smart Routine API - Running\", \"version\": \"1.0\"}";
+            return "{\"message\": \"Smart Routine API - Online 🚀\", \"version\": \"1.0\"}";
         });
 
-        // ==================== ROTAS DE USUÁRIO ====================
+        // ==================== GRUPOS DE ROTAS ====================
+
+        // --- Usuário ---
         path("/usuario", () -> {
-            get("/:id", usuarioService::get);
-            get("", usuarioService::getAll);
-            post("/login", usuarioService::login);
-            post("", usuarioService::insert);
-            put("/:id", usuarioService::update);
-            delete("/:id", usuarioService::delete);
+            post("/login", usuarioService::login);     // Login
+            post("", usuarioService::insert);          // Cadastro
+            get("/:id", usuarioService::get);          // Buscar um
+            get("", usuarioService::getAll);           // Listar todos
+            put("/:id", usuarioService::update);       // Atualizar
+            delete("/:id", usuarioService::delete);    // Deletar
         });
 
-        // ==================== ROTAS DE ALIMENTO ====================
+        // --- Alimento ---
         path("/alimento", () -> {
             get("/search", alimentoService::search);
             get("/categorias", alimentoService::getCategorias);
@@ -47,7 +52,7 @@ public class Aplicacao {
             delete("/:id", alimentoService::delete);
         });
 
-        // ==================== ROTAS DE RECEITA ====================
+        // --- Receita ---
         path("/receita", () -> {
             get("/search", receitaService::search);
             get("/tempo/:tempo", receitaService::getByTempo);
@@ -59,7 +64,7 @@ public class Aplicacao {
             delete("/:id", receitaService::delete);
         });
 
-        // ==================== ROTAS DE REGISTRA ====================
+        // --- Registra (Controle de Estoque/Compras) ---
         path("/registra", () -> {
             get("/usuario/:usuarioId/vencidos", registraService::getVencidos);
             get("/usuario/:usuarioId/vencimento/:dias", registraService::getProximosVencimento);
@@ -71,7 +76,7 @@ public class Aplicacao {
             delete("/:id", registraService::delete);
         });
 
-        // ==================== ROTAS DE RECEITAS FAVORITAS ====================
+        // --- Receitas Favoritas ---
         path("/favoritas", () -> {
             get("/check/:usuarioId/:receitaId", receitaFavoritaService::checkFavorita);
             get("/usuario/:usuarioId", receitaFavoritaService::getByUsuario);
@@ -84,10 +89,17 @@ public class Aplicacao {
             delete("/:id", receitaFavoritaService::delete);
         });
 
+        // --- Servico IA ---
+        path("/ia", () -> {
+            post("/recipe",iaService::gerarReceita);
+            //post("/recipe", (req, res) -> new IAService().gerarReceita(req, res));
+        });
+
+        // Log de inicialização
         System.out.println("===========================================");
-        System.out.println("Smart Routine API - Servidor Iniciado");
-        System.out.println("Porta: 6789");
-        System.out.println("URL: http://localhost:6789");
+        System.out.println("🚀 Smart Routine API - Servidor Iniciado");
+        System.out.println("🔌 Porta: " + port());
+        System.out.println("🌐 URL: http://localhost:" + port());
         System.out.println("===========================================");
         System.out.println("Entidades disponíveis:");
         System.out.println("  • Usuario");
@@ -98,7 +110,12 @@ public class Aplicacao {
         System.out.println("===========================================");
     }
 
+    /**
+     * Configura o Cross-Origin Resource Sharing (CORS)
+     * Permite que o Front-end (React) em outra porta acesse esta API.
+     */
     private static void configurarCORS() {
+        // Responde a todas as requisições OPTIONS (Pre-flight)
         options("/*", (request, response) -> {
             String accessControlRequestHeaders = request.headers("Access-Control-Request-Headers");
             if (accessControlRequestHeaders != null) {
@@ -113,10 +130,11 @@ public class Aplicacao {
             return "OK";
         });
 
+        // Adiciona os headers em todas as respostas
         before((request, response) -> {
-            response.header("Access-Control-Allow-Origin", "*");
+            response.header("Access-Control-Allow-Origin", "*"); // Permite qualquer origem
             response.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
-            response.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
+            response.header("Access-Control-Allow-Headers", "Content-Type, Authorization, X-Requested-With");
         });
     }
 }
