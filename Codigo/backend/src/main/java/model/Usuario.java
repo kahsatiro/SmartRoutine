@@ -8,6 +8,7 @@ public class Usuario {
     private String email;
     private String senha;
     private LocalDate dataNascimento;
+    private LocalDate dataAdicao;
 
     // Construtor vazio
     public Usuario() {
@@ -16,15 +17,17 @@ public class Usuario {
         this.email = "";
         this.senha = "";
         this.dataNascimento = LocalDate.now();
+        this.dataAdicao = LocalDate.now();
     }
 
     // Construtor completo
-    public Usuario(int id, String nome, String email, String senha, LocalDate dataNascimento) {
+    public Usuario(int id, String nome, String email, String senha, LocalDate dataNascimento, LocalDate dataAdicao) {
         this.id = id;
         this.nome = nome;
         this.email = email;
         this.senha = senha;
         this.dataNascimento = dataNascimento;
+        this.dataAdicao = dataAdicao;
     }
 
     // Construtor sem ID (para inserção)
@@ -56,6 +59,10 @@ public class Usuario {
         return dataNascimento;
     }
 
+    public LocalDate getDataAdicao() {
+        return dataAdicao;
+    }
+
     // Setters
     public void setId(int id) {
         this.id = id;
@@ -77,6 +84,10 @@ public class Usuario {
         this.dataNascimento = dataNascimento;
     }
 
+    public void setDataAdicao(LocalDate dataAdicao) {
+        this.dataAdicao = dataAdicao;
+    }
+
     @Override
     public String toString() {
         return "Usuario{" +
@@ -84,6 +95,8 @@ public class Usuario {
                 ", nome='" + nome + '\'' +
                 ", email='" + email + '\'' +
                 ", dataNascimento=" + dataNascimento +
+                ", dataAdicao=" + dataAdicao +
+                ", senha=" + senha +
                 '}';
     }
 

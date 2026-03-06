@@ -51,6 +51,16 @@ public class Alimento {
         this.categoria = categoria;
     }
 
+    public void mergeWith(Alimento outro) {
+        if (outro.getNome() != null && !outro.getNome().trim().isEmpty()) {
+            this.nome = outro.getNome();
+        }
+
+        if (outro.getCategoria() != null && !outro.getCategoria().trim().isEmpty()) {
+            this.categoria = outro.getCategoria();
+        }
+    }
+
     @Override
     public String toString() {
         return "Alimento{" +

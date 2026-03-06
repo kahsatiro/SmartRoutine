@@ -15,8 +15,6 @@ public class ReceitaFavorita {
     // Construtor vazio
     public ReceitaFavorita() {
         this.id = -1;
-        this.usuarioId = 0;
-        this.receitaId = 0;
         this.dataAdicao = LocalDateTime.now();
     }
 

@@ -77,6 +77,24 @@ public class Receita {
         this.informacoes = informacoes;
     }
 
+    public void mergeWith(Receita outra) {
+        if (outra.getTitulo() != null && !outra.getTitulo().trim().isEmpty()) {
+            this.titulo = outra.getTitulo();
+        }
+
+        if (outra.getPorcao() != null && !outra.getPorcao().trim().isEmpty()) {
+            this.porcao = outra.getPorcao();
+        }
+
+        if (outra.getTempoPreparo() > 0) {
+            this.tempoPreparo = outra.getTempoPreparo();
+        }
+
+        if (outra.getInformacoes() != null) {
+            this.informacoes = outra.getInformacoes();
+        }
+    }
+
     @Override
     public String toString() {
         return "Receita{" +

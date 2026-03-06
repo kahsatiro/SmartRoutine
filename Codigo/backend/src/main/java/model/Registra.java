@@ -11,7 +11,7 @@ public class Registra {
     private LocalDate dataValidade;
     private String unidadeMedida;
     private String lote;
-    private BigDecimal quantidade;
+    private int quantidade;
 
     // Atributos extras para joins
     private String nomeAlimento;
@@ -26,12 +26,12 @@ public class Registra {
         this.dataValidade = null;
         this.unidadeMedida = "";
         this.lote = "";
-        this.quantidade = BigDecimal.ZERO;
+        this.quantidade = 0;
     }
 
     // Construtor completo
     public Registra(int id, int alimentoId, int usuarioId, LocalDate dataCompra,
-                    LocalDate dataValidade, String unidadeMedida, String lote, BigDecimal quantidade) {
+                    LocalDate dataValidade, String unidadeMedida, String lote, int quantidade) {
         this.id = id;
         this.alimentoId = alimentoId;
         this.usuarioId = usuarioId;
@@ -44,7 +44,7 @@ public class Registra {
 
     // Construtor sem ID (para inserção)
     public Registra(int alimentoId, int usuarioId, LocalDate dataCompra,
-                    LocalDate dataValidade, String unidadeMedida, String lote, BigDecimal quantidade) {
+                    LocalDate dataValidade, String unidadeMedida, String lote, int quantidade) {
         this.alimentoId = alimentoId;
         this.usuarioId = usuarioId;
         this.dataCompra = dataCompra;
@@ -83,7 +83,7 @@ public class Registra {
         return lote;
     }
 
-    public BigDecimal getQuantidade() {
+    public int getQuantidade() {
         return quantidade;
     }
 
@@ -124,7 +124,7 @@ public class Registra {
         this.lote = lote;
     }
 
-    public void setQuantidade(BigDecimal quantidade) {
+    public void setQuantidade(int quantidade) {
         this.quantidade = quantidade;
     }
 
@@ -134,6 +134,36 @@ public class Registra {
 
     public void setNomeUsuario(String nomeUsuario) {
         this.nomeUsuario = nomeUsuario;
+    }
+
+    public void mergeWith(Registra outro) {
+        if (outro.getUsuarioId() > 0) {
+            this.usuarioId = outro.getUsuarioId();
+        }
+
+        if (outro.getAlimentoId() > 0) {
+            this.alimentoId = outro.getAlimentoId();
+        }
+
+        if (outro.getDataCompra() != null) {
+            this.dataCompra = outro.getDataCompra();
+        }
+
+        if (outro.getDataValidade() != null) {
+            this.dataValidade = outro.getDataValidade();
+        }
+
+        if (outro.getUnidadeMedida() != null && !outro.getUnidadeMedida().isEmpty()) {
+            this.unidadeMedida = outro.getUnidadeMedida();
+        }
+
+        if (outro.getLote() != null && !outro.getLote().isEmpty()) {
+            this.lote = outro.getLote();
+        }
+
+        if (outro.getQuantidade() > 0) {
+            this.quantidade = outro.getQuantidade();
+        }
     }
 
     @Override
